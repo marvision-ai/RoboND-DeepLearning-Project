@@ -14,6 +14,10 @@ The main building blocks of an FCN are the following:
 - Transposed convolutional layers for upsampling
 - Skip connections
 
+A general idea of one looks as such: 
+![alt text](docs/misc/FCN.JPG "Model")
+
+
 ### Encoder ###
 
 The encoding stage exsists to extract features that will be useful for segmentation from the specific image. It does this via multiple layers that start by finding simple patterns in the first layer, and then gradually learns to understand more and more complex shapes/structures/feautures in each image the deeper the network goes. This is why I chose to do a 5 layer network; to allow it to increase the features it can find when presented with the training data. 
@@ -89,11 +93,7 @@ Once the network passes the last decoder stage, there is a convolutional output 
 
 ### Final fully-connected NN architecture ###
 
-The fully connected network is shown below. 
-
-
-
-It features 3 encoder layers and 3 decoder layers. Inside the decoder, there are 2 seperable convolution layers after the upsampling and concatenation steps (as shown above in the code). This was found to be an optimal number of layers to test with seeing as that I do not have the most up to date GPU to run deeper networks with greater batch sizes.  
+My FNC features 3 encoder layers and 3 decoder layers. Inside the decoder, there are 2 seperable convolution layers after the upsampling and concatenation steps (as shown above in the code). This was found to be an optimal number of layers to test with seeing as that I do not have the most up to date GPU to run deeper networks with greater batch sizes.  
 
 ```python
 def fcn_model(inputs, num_classes):
