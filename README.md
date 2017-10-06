@@ -1,6 +1,7 @@
 [![Udacity - Robotics NanoDegree Program](https://s3-us-west-1.amazonaws.com/udacity-robotics/Extra+Images/RoboND_flag.png)](https://www.udacity.com/robotics)
 
-##Writeup##
+## Writeup ##
+
 You can find my report [here (Project_writeup.md)](Project_writeup.md)
 
 You can see a video of this in action: https://www.youtube.com/watch?v=x8wavJLAT5k&t=1s
