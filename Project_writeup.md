@@ -9,13 +9,27 @@ Before this introduction to fully-convoluted networks, neural nets that include 
 When using a FCN, you can identify "where" in the image a certain object is. This is done by keeping spacial information through each pass of the filters. I followed the suggestions in the lectures and the project descriptions, and built a Fully Convolutional Network (FCN) to achieve the segmentation needed for the project.
 
 The main building blocks of an FCN are the following:
-- Convolutional Neural Network (CNN) with Encoder and Decoder
+- Convolutional Neural Network (CNN) with Encoder and Decoder constructed with seperable convolution layers
 - 1x1 Convolution to connect the encoder and decoder
 - Transposed convolutional layers for upsampling
 - Skip connections
 
 #### Encoder ####
+
 The encoding stage exsists to extract features that will be useful for segmentation from the specific image. It does this via multiple layers that start by finding simple patterns in the first layer, and then gradually learns to understand more and more complex shapes/structures/feautures in each image the deeper the network goes. This is why I chose to do a 5 layer network; to allow it to increase the features it can find when presented with the training data. 
+
+The Encoder in the FCN will essentially require separable convolution layers, due to its advantages as explained above.  
+Below is the implementation for seperable_2d_batchnorm which includes ReLU activation applied to the layers to non-linearize the functions.
+
+```python 
+def separable_conv2d_batchnorm(input_layer, filters, strides=1):
+    output_layer = SeparableConv2DKeras(filters=filters,kernel_size=3, strides=strides,
+                             padding='same', activation='relu')(input_layer)
+    
+    output_layer = layers.BatchNormalization()(output_layer) 
+    return output_layer
+
+```
 
 ```python
 def encoder_block(input_layer, filters, strides):
@@ -26,10 +40,18 @@ def encoder_block(input_layer, filters, strides):
     return output_layer
 ```
 
+
 ### 1x1 Convolution ###
 
-```python
+The 1x1 convolution layer in the FCN, however, is a regular convolution. Below is the implementation of the regular convolution with ReLU activation.
 
+```python
+def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
+    output_layer = layers.Conv2D(filters=filters, kernel_size=kernel_size, strides=strides, 
+                      padding='same', activation='relu')(input_layer)
+    
+    output_layer = layers.BatchNormalization()(output_layer) 
+    return output_layer
 ```
 
 
