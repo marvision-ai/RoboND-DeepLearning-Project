@@ -14,7 +14,7 @@ The main building blocks of an FCN are the following:
 - Transposed convolutional layers for upsampling
 - Skip connections
 
-#### Encoder ####
+### Encoder ###
 
 The encoding stage exsists to extract features that will be useful for segmentation from the specific image. It does this via multiple layers that start by finding simple patterns in the first layer, and then gradually learns to understand more and more complex shapes/structures/feautures in each image the deeper the network goes. This is why I chose to do a 5 layer network; to allow it to increase the features it can find when presented with the training data. 
 
@@ -56,7 +56,7 @@ def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
 This 1x1 convolution layer seeks to implement the similar function as the fully-connected layer would, WHILE maintaining the spacial information. 
 
 
-#### Decoder ####
+### Decoder ###
 
 The 1x1 convolution connects to the decoder stage which then consists of multiple layers which up-scale the encoder output back to the same dimensions as the input image.
 
@@ -119,4 +119,44 @@ def fcn_model(inputs, num_classes):
     # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
     return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(x)
 ```
+
+### Tuning Hyperparameters ###
+
+#### Learning rate
+I tried different learning rates, but they either overtrained, or trained very, very slow and would not end providing a good model. In the end the recommended learning rate for the Adam optimiser ended up being `0.005`. 
+
+#### Batch size
+This number should be as high as your system can handle. If I had a better GPU I would have chosen something like `128/256`,but my GPU could only handle a batch size of around ~45. I chose to use 32, to give it a speed increase and have a nicer number to work with.
+
+#### Steps per epoch
+The formula is usually : `number of images to train on / divided by the batch size` . So I chose numbers between 45 -100. I ended up with 50 meeting requirements for my model.
+
+#### Validation steps per epoch
+Same as with steps per epoch, only related to number of images to validate on. I turned out to have better results with more steps. This number ended up being 64.
+
+#### Number of epochs
+This is the number of times you want the training to run. One must balance it between not training enough and overtraining. The right balance gives us the best performing model, in it's most general form. With the size of my model and the learning rate, I ended up running the training for 50 epochs.
+
+#### Workers
+This is the number of parallel processes during training. I tried different values here, but could not find any significant differences. So I picked 10 with the intention of speeding up the training.
+
+
+### Result
+The result of these hyper parameters gave the learning loss are shown in the figure below. As the figure shows the loss jumps up and down a bit, and even indicates overlearning. This can be much better if I provided more validation data, and also optimized the Adam optimizer more.
+
+The resulting IoU (Intersection of union) score is 41%. Over the required threshold of 40%.
+A video from the follow mode can be found at : https://www.youtube.com/watch?v=x8wavJLAT5k
+
+## Improvements
+#### Tensorflow implementation
+I could rewrite the project to use tensorflow, which could potentially improve the speed of training. This would allow me to test more models and hyperparameters. This would be very possible since Keras can use tensorflow as its backend.
+
+#### Use AWS 
+I could have used AWS if I wanted to train with higher batch sizes. I decided not to, as my computer was able to withstand the punishment I gave to it.
+
+
+## Summary 
+In all, this project really showed me how much time it takes to optimize hyperparameters and the uncertainty that comes with it. Deeplearning is still in its infant stage, and I look forward to seeing the differences a few more years of developement will provide. 
+
+
 
