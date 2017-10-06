@@ -13,10 +13,11 @@ The main building blocks of an FCN are the following:
 - 1x1 Convolution to connect the encoder and decoder
 - Transposed convolutional layers for upsampling
 - Skip connections
+- max pooling and dropout
 
 A general idea of one looks as such: 
 ![alt text](docs/misc/FCN.JPG "Model")
-
+<sub><sup>source : http://rnd.azoft.com/object-detection-fully-convolutional-neural-networks/</sup></sub>
 
 ### Encoder ###
 
@@ -143,6 +144,15 @@ This is the number of parallel processes during training. I tried different valu
 
 ### Result
 The result of these hyper parameters gave the learning loss are shown in the figure below. As the figure shows the loss jumps up and down a bit, and even indicates overlearning. This can be much better if I provided more validation data, and also optimized the Adam optimizer more.
+
+This is how the model started: 
+![alt text](docs/misc/inital_training.JPG "init training")
+
+
+After 50 epochs: 
+![alt text](docs/misc/final_training.JPG "final training")
+
+
 
 The resulting IoU (Intersection of union) score is 41%. Over the required threshold of 40%.
 A video from the follow mode can be found at : https://www.youtube.com/watch?v=x8wavJLAT5k
