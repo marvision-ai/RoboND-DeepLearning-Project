@@ -53,9 +53,20 @@ def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
     output_layer = layers.BatchNormalization()(output_layer) 
     return output_layer
 ```
+This 1x1 convolution layer seeks to implement the similar function as the fully-connected layer would, WHILE maintaining the spacial information. 
 
 
 #### Decoder ####
+
+The 1x1 convolution connects to the decoder stage which then consists of multiple layers which up-scale the encoder output back to the same dimensions as the input image.
+
+This bilinear up-sampling happens each layer. Upsampling by a factor of 2 is generally recommended: 
+```python
+def bilinear_upsample(input_layer):
+    output_layer = BilinearUpSampling2D((2,2))(input_layer)
+    return output_layer
+```
+
 ```python
 def decoder_block(small_ip_layer, large_ip_layer, filters):
     
@@ -71,23 +82,41 @@ def decoder_block(small_ip_layer, large_ip_layer, filters):
     
     return output_layer2
 ```
+The last part to the decoder section are the skip connections which connect some non-adjacent layers together. For instance, the output from the first encoder is connected directly to the input of the final decoder. This is done to retain some information that was lost during the encoding process. Doing this allows us to retain more accuracy and precision in the final segmentation. 
+
+Once the network passes the last decoder stage, there is a convolutional output layer with a softmax activation to make the final pixel-wise segmentation between the 3 classes. 
+
+
+### Final fully-connected NN architecture ###
+
+The fully connected network is shown below. 
 
 
 
-### Transposed Convolitional Layers for Upsampling ###
+It features 3 encoder layers and 3 decoder layers. Inside the decoder, there are 2 seperable convolution layers after the upsampling and concatenation steps (as shown above in the code). This was found to be an optimal number of layers to test with seeing as that I do not have the most up to date GPU to run deeper networks with greater batch sizes.  
 
 ```python
-
+def fcn_model(inputs, num_classes):
+    
+    # TODO Add Encoder Blocks. 
+    # Remember that with each encoder layer, the depth of your model (the number of filters) increases.
+    x1 = encoder_block(inputs, 16, 2)
+    x2 = encoder_block(x1, 32, 2)
+    x3 = encoder_block(x2, 64, 2)
+    x4 = encoder_block(x3, 128, 2)
+    x5 = encoder_block(x4, 256, 2)
+    
+    # TODO Add 1x1 Convolution layer using conv2d_batchnorm().
+    x5_5 = conv2d_batchnorm(x5,256,kernel_size=1)
+    
+    # TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
+    x = decoder_block(x5_5, x4, 256)
+    x = decoder_block(x, x3, 128)
+    x = decoder_block(x, x2, 64)
+    x = decoder_block(x, x1, 32)
+    x = decoder_block(x, inputs, 16)
+    
+    # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
+    return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(x)
 ```
 
-### Skip connections ###
-```python
-
-```
-
-
-
-
-
-
-These building blocks make up a very good model for image segmentation. The first three building blocks can be seen in this image:
