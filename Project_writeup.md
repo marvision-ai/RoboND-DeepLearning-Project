@@ -146,10 +146,12 @@ This is the number of parallel processes during training. I tried different valu
 The result of these hyper parameters gave the learning loss are shown in the figure below. As the figure shows the loss jumps up and down a bit, and even indicates overlearning. This can be much better if I provided more validation data, and also optimized the Adam optimizer more.
 
 This is how the model started: 
+
 ![alt text](docs/misc/inital_training.JPG "init training")
 
 
 After 50 epochs: 
+
 ![alt text](docs/misc/final_training.JPG "final training")
 
 
@@ -164,6 +166,8 @@ I could rewrite the project to use tensorflow, which could potentially improve t
 #### Use AWS 
 I could have used AWS if I wanted to train with higher batch sizes. I decided not to, as my computer was able to withstand the punishment I gave to it.
 
+#### MORE DATA
+Simply put, you can never have enough data. 
 
 ## Summary 
 In all, this project really showed me how much time it takes to optimize hyperparameters and the uncertainty that comes with it. Deeplearning is still in its infant stage, and I look forward to seeing the differences a few more years of developement will provide. 
