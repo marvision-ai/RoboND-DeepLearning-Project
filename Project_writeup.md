@@ -94,7 +94,7 @@ Once the network passes the last decoder stage, there is a convolutional output 
 
 ### Final fully-connected NN architecture ###
 
-My FNC features 3 encoder layers and 3 decoder layers. Inside the decoder, there are 2 seperable convolution layers after the upsampling and concatenation steps (as shown above in the code). This was found to be an optimal number of layers to test with seeing as that I do not have the most up to date GPU to run deeper networks with greater batch sizes.  
+My FNC features 5 encoder layers and 5 decoder layers. Inside the decoder, there are 2 seperable convolution layers after the upsampling and concatenation steps (as shown above in the code). This was found to be an optimal number of layers to test with seeing as that I do not have the most up to date GPU to run deeper networks with greater batch sizes.  
 
 ```python
 def fcn_model(inputs, num_classes):
