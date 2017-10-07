@@ -87,6 +87,9 @@ def decoder_block(small_ip_layer, large_ip_layer, filters):
     
     return output_layer2
 ```
+
+Encoding images typically removes high frequency data which is not retrievable for it is removed during the decoding stage. In other words, when down sampling an image you are removing high frequency information (i.e. detail). This is because you are removing some of the information from the pixels you removed. To up-sample the best you can do is a slightly worse version than the original if you have no other information about the image. This is when using skip connections plays a keep part in the process. 
+
 The last part to the decoder section are the skip connections which connect some non-adjacent layers together. For instance, the output from the first encoder is connected directly to the input of the final decoder. This is done to retain some information that was lost during the encoding process. Doing this allows us to retain more accuracy and precision in the final segmentation. 
 
 Once the network passes the last decoder stage, there is a convolutional output layer with a softmax activation to make the final pixel-wise segmentation between the 3 classes. 
@@ -170,7 +173,9 @@ I could have used AWS if I wanted to train with higher batch sizes. I decided no
 Simply put, you can never have enough data. 
 
 ## Summary 
-In all, this project really showed me how much time it takes to optimize hyperparameters and the uncertainty that comes with it. Deeplearning is still in its infant stage, and I look forward to seeing the differences a few more years of developement will provide. 
+In conclusion, the drone was successfully able to track and follow the hero target in simulation. It is quite satisfying to watch it continously track the hero even when she makes sharp turns or walks into a crowd. That really says something about deep learning. The network architecture could be used to track other object too, such as dogs/cats/cars...really anything, as long as there is additional data that could be provided and trained/validated against. That's really what makes it super cool to me; its flexibility. Making the drone be able to distingush between the different types of objects and then be able to switch between them on the fly when it think it's necessary would be quite a cool extension to the project. 
+
+In all, this project really showed me how much time it takes to optimize hyperparameters and the uncertainty that comes with it. Deeplearning is still in its infant stage, and I look forward to seeing the differences a few more years of developement will provide. Thank you to udacity for providing this project.  
 
 
 
